@@ -1,0 +1,87 @@
+---
+title: "R Day 2"
+author: "Saurabh Annadate"
+date: "9/18/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+gapminder <- read.csv(here::here("data","gapminder5.csv"))
+
+head(gapminder)
+str(gapminder)
+```
+
+## Converting factors to characters
+```{r}
+gapminder$country <- as.character(gapminder$country)
+gapminder$continent <- as.character(gapminder$continent)
+```
+
+#Creating R variables with a R loop
+```{r}
+obs <- 1:nrow(gapminder)
+
+for (i in obs) { # the function to repeat is enclosed in braces {}
+  gapminder[i, "log_gdpPercap"] <- log(gapminder[i, "gdpPercap"])
+  gapminder[i, "log_pop"] <- log(gapminder[i, "pop"])
+}
+```
+
+```{r}
+cont <- unique(gapminder$continent)
+coun <- unique(gapminder$country)
+
+for(i in cont)
+{
+  for(j in coun)
+  {
+    sd_c <- sd(gapminder$lifeExp[gapminder$continent==i & gapminder$country==j], na.rm = T)
+    print(paste0(i," & ",j,": ",sd_c))
+  }
+  
+}
+```
+
+```{r}
+i <- 1987
+
+while(i<=2002)
+{
+  sd_c=sd(gapminder$lifeExp[gapminder$year==i])
+  print(paste0(i,":",sd_c))
+  i <- i+5
+}
+```
+
+```{r}
+i <- 1952
+for (i in unique(gapminder$year))
+{
+  if(i<1987)
+  {
+    print(paste0("The year ",i," is less than 1987"))
+  } else
+  {
+    print(paste0("The mean population for year ",i," is ", mean(gapminder$pop[gapminder$year==i])))
+  }
+}
+
+summary(gapminder)
+gapminder$continent
+```
+
+```{r}
+LE_prop <- function(df, variable)
+{
+  print(paste0("Mean Life Expetency for continent ",variable," is: ",mean(df$lifeExp[df$continent==variable])))
+}
+
+LE_prop(gapminder,"Europe")
+```
+
